@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Train AI Model</h1>
+        <p>Dataset: {{ dataset.original_filename }}</p>
+    </div>
+</div>
+
+<div class="card help-card">
+    <h2>Recommended settings for your datasets</h2>
+    <ul>
+        <li><strong>salary_data_regression.csv:</strong> Regression, target = Salary</li>
+        <li><strong>obesity_classification.csv:</strong> Classification, target = Label</li>
+        <li><strong>heart.csv:</strong> Classification, target = target, or Clustering with no target</li>
+    </ul>
+</div>
+
+<form class="card" method="POST">
+    <label>Model Name</label>
+    <input class="input" type="text" name="model_name" value="My Model" required>
+
+    <label>Algorithm Type</label>
+    <select class="input" name="algorithm_type" required>
+        <option value="regression">Regression</option>
+        <option value="classification">Classification</option>
+        <option value="clustering">Clustering</option>
+    </select>
+
+    <label>Algorithm</label>
+    <select class="input" name="algorithm_name" required>
+        <option value="linear_regression">Linear Regression</option>
+        <option value="random_forest_regressor">Random Forest Regressor</option>
+        <option value="logistic_regression">Logistic Regression</option>
+        <option value="random_forest_classifier">Random Forest Classifier</option>
+        <option value="kmeans">KMeans Clustering</option>
+    </select>
+
+    <label>Transform / Normalize Dataset</label>
+    <select class="input" name="preprocessing_method" required>
+        <option value="get_dummies">Use Pandas get_dummies()</option>
+        <option value="ordinal_encoder">Use OrdinalEncoder fit_transform()</option>
+    </select>
+
+    <label>Target Column</label>
+    <select class="input" name="target_column">
+        <option value="">None for clustering</option>
+        {% for column in columns %}
+            <option value="{{ column }}">{{ column }}</option>
+        {% endfor %}
+    </select>
+
+    <h2>Choose Feature Columns</h2>
+    <div class="checkbox-grid">
+        {% for column in columns %}
+            <label class="checkbox-item">
+                <input type="checkbox" name="feature_columns" value="{{ column }}">
+                {{ column }}
+            </label>
+        {% endfor %}
+    </div>
+
+    <button class="btn primary" type="submit">Train Model</button>
+</form>
+{% endblock %}

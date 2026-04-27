@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ dataset.original_filename }}</h1>
+        <p>Dataset shape: {{ dataset.rows }} rows × {{ dataset.columns }} columns</p>
+    </div>
+    <a class="btn primary" href="{{ url_for('train', dataset_id=dataset.id) }}">Train AI Model</a>
+</div>
+
+<div class="grid three">
+    <a class="action-card" href="{{ url_for('dataset_columns', dataset_id=dataset.id) }}">
+        <h3>Column Names and Details</h3>
+        <p>Uses Pandas dtypes.</p>
+    </a>
+
+    <a class="action-card" href="{{ url_for('dataset_describe', dataset_id=dataset.id) }}">
+        <h3>Basic Statistics</h3>
+        <p>Uses Pandas describe().</p>
+    </a>
+
+    <form class="action-card" method="POST" action="{{ url_for('dataset_dropna', dataset_id=dataset.id) }}">
+        <h3>Remove Empty Rows</h3>
+        <p>Uses Pandas dropna().</p>
+        <button class="btn danger" type="submit">Remove Empty Rows</button>
+    </form>
+</div>
+
+<div class="grid two">
+    <form class="card" method="POST" action="{{ url_for('dataset_head', dataset_id=dataset.id) }}">
+        <h2>First N Rows</h2>
+        <input class="input" type="number" name="n" value="5" min="1" required>
+        <button class="btn primary" type="submit">Show First Rows</button>
+    </form>
+
+    <form class="card" method="POST" action="{{ url_for('dataset_tail', dataset_id=dataset.id) }}">
+        <h2>Last N Rows</h2>
+        <input class="input" type="number" name="n" value="5" min="1" required>
+        <button class="btn primary" type="submit">Show Last Rows</button>
+    </form>
+</div>
+
+{% if table_html %}
+<div class="card table-card">
+    <h2>{{ title }}</h2>
+    <div class="table-wrapper">
+        {{ table_html | safe }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Make Prediction</h1>
+        <p>{{ trained_model.name }} — {{ trained_model.algorithm_type }} / {{ trained_model.algorithm_name }}</p>
+    </div>
+</div>
+
+<form class="card" method="POST">
+    <h2>Input Data</h2>
+    <p>The fields below are generated automatically from the selected feature columns.</p>
+
+    {% for column in feature_columns %}
+        <label>{{ column }}</label>
+        <input class="input" type="text" name="{{ column }}" required>
+    {% endfor %}
+
+    <button class="btn primary" type="submit">Predict</button>
+</form>
+
+{% if prediction is not none %}
+<div class="card result-card">
+    <h2>Prediction Result</h2>
+    <pre>{{ prediction }}</pre>
+</div>
+{% endif %}
+{% endblock %}

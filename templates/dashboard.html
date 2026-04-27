@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <h1>Welcome, {{ current_user.username }}</h1>
+    <p>Upload a CSV dataset, analyze it, clean it, train an AI model, and make predictions.</p>
+</section>
+
+<div class="grid two">
+    <div class="card">
+        <h2>Upload CSV Dataset</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input class="input" type="file" name="csv_file" accept=".csv" required>
+            <button class="btn primary" type="submit">Upload CSV</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Your Models</h2>
+        {% if trained_models %}
+            {% for model in trained_models %}
+                <div class="mini-card">
+                    <strong>{{ model.name }}</strong>
+                    <p>{{ model.algorithm_type }} - {{ model.algorithm_name }}</p>
+                    <a class="btn small" href="{{ url_for('predict', model_id=model.id) }}">Use Model</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No trained models yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Your Datasets</h2>
+    {% if datasets %}
+        <div class="dataset-grid">
+            {% for dataset in datasets %}
+                <a class="dataset-card" href="{{ url_for('dataset_detail', dataset_id=dataset.id) }}">
+                    <h3>{{ dataset.original_filename }}</h3>
+                    <p>{{ dataset.rows }} rows × {{ dataset.columns }} columns</p>
+                    <span>{{ dataset.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No datasets uploaded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
